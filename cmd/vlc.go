@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"Archiver/lib/vlc"
 	"errors"
 	"fmt"
 	"io"
@@ -31,14 +32,15 @@ func pack(_ *cobra.Command, args []string) {
 		handleErr(err)
 	}
 
+	defer r.Close()
+
 	data, err := io.ReadAll(r)
+	fmt.Println(string(data))
 	if err != nil {
 		handleErr(err)
 	}
 
-	// packed := Encode(data)
-	packed := "" // результат сжатия
-	fmt.Println(string(data))
+	packed := vlc.Encode(string(data)) // результат сжатия
 
 	// packedFileName - имя сжатого файла,  byte(packed) - содержимое файла, 0644- права
 	err = os.WriteFile(packedFileName(filePath), []byte(packed), 0644)
